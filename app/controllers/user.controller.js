@@ -1,4 +1,4 @@
-const { getUserByEmail, getUserExemption, getUserByRegistrationkey, insertUserSimple, insertUser, getUserBarometer, getUserInfoByUserId, postUserInfoByUserId, getUserEvents, getAllUsers, getUserContactById, getUserAddressById, getUserExemptionById, updateUserByUserId, getAllUserByCompanyId, getUserGuaranteesByUserId, getUserGuarantees, getUserGuaranteeValues, getUserRecipentsByUserId, saveUserRecipentsByUserId, saveUserAskHospital, getUserMessageByUserId, postUserMessageByUserId, getNbUsersByCompanyId, getAllUserByCompany, findFilesByUserId } = require("../queries/user.queries");
+const { getUserByEmail, getUserExemption, getUserByRegistrationkey, insertUserSimple, insertUser, getUserBarometer, getUserInfoByUserId, postUserInfoByUserId, getUserEvents, getAllUsers, getUserContactById, getUserAddressById, getUserExemptionById, updateUserByUserId, getAllUserByCompanyId, getUserGuaranteesByUserId, getUserGuarantees, getUserGuaranteeValues, getUserRecipentsByUserId, saveUserRecipentsByUserId, saveUserAskHospital, getUserMessageByUserId, postUserMessageByUserId, getNbUsersByCompanyId, getAllUserByCompany, findFilesByUserId,fetchMessageByUserId } = require("../queries/user.queries");
 const { getCompanyAccessByUserId } = require("../queries/company.queries");
 const { updateUserAccess } = require("../queries/useraccess.queries");
 const { getGaranteePackById } = require("../queries/guarantee.queries");
@@ -1161,5 +1161,57 @@ exports.userRegistration = async (req, res, next) => {
       enabled: false,
     })
   }
+}
+
+exports.getUserMessageByUserId = async (req, res, next) => {
+
+  let user_id = parseInt(req.params.user_id) || null
+  if (!user_id || !Number.isInteger(user_id) || user_id == 0)
+    return Utils.mwarn(res, req, 'user_id is required')
+
+  try {
+    var rows = await fetchMessageByUserId(user_id)
+    var resarray = []
+    var responses = []
+    for (var k in rows) {
+      //mlog(rows);
+      if (rows[k].response_message_id != null) {
+        if (!Array.isArray(responses[rows[k].response_message_id]))
+          responses[rows[k].response_message_id] = []
+        responses[rows[k].response_message_id].push({
+          message_id: rows[k].message,
+          sender: rows[k].sender,
+          text: rows[k].text,
+          datecreate: rows[k].datecreate,
+        })
+      } else {
+        resarray.push({
+          message_id: rows[k].message_id,
+          sender: rows[k].sender,
+          text: rows[k].text,
+          datecreate: rows[k].datecreate,
+          responses: responses,
+        })
+      }
+    }
+    for (var k in resarray) {
+      if (
+        resarray[k].message_id &&
+        Array.isArray(responses[resarray[k].message_id])
+      )
+        resarray[k].responses = responses[resarray[k].message_id]
+    }
+    res.status(200).json({
+      action: req.url,
+      method: req.method,
+      data: {
+        messages: resarray,
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
+
+
 }
 
