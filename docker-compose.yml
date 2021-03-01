@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  app:
+    container_name: api
+    restart: always
+    build:
+      context: ./app
+    environment:
+      - NODE_ENV=development
+    command: "pm2-dev apiback.js"
+    ports:
+      - "3000:3000"
+    networks:
+      -  webapp-docker_some-net
+   
+networks:
+ webapp-docker_some-net:
+   external: true
+

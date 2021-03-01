@@ -1,0 +1,232 @@
+
+
+//////////////////////////////////////////
+ admin/user/file/{user_id}:
+    get:
+      summary: Recupération de la liste des files par user
+      tags:
+        - "admin"
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success - list des bénéficiaires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  methode:
+                    type: string
+                  message:
+                    type: string
+                  files: 
+                    type: array
+                    items:
+                     type: object
+//////////////////////////////////////////
+
+
+  /company/status:
+   get:
+     summary: recuperer tous les status d'une sociétée
+     description:
+      recuperer tous les status d'une sociétée
+     tags:
+     - "Company"
+     responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  methode:
+                    type: string
+                  status:
+                    type: array
+                    items:
+                      type: object
+
+
+
+//////////////////////////////////////////
+
+
+
+  /company/updateStatus:
+   post:
+     summary: changer le status d'une entrprise
+     description:
+      changer le status d'une entrprise
+     tags:
+     - "Company"
+     requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                company_id:
+                  type: integer
+                status:
+                  type: string
+     responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  methode:
+                    type: string
+                  status:
+                    type: array
+                    items:
+                      type: object
+     
+        '404':
+          description: probleme to get company live
+
+
+
+
+//////////////////////////////////////////
+
+     /admin/packs:
+    post:
+      tags:
+        - "admin"
+      summary:  Enregistrement d'un nouveaux pack
+      description: Enregistrement d'un nouveaux pack dans le base de 
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                weight:
+                  type: integer
+      responses:
+        '200':
+          description: Success - Ok access token is sended
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  methode:
+                    type: string
+                  message:
+                    type: string
+                  
+        '403':
+          description: le serveur marche pas.
+
+ delete:
+      tags:
+        - "admin"
+      summary:  update un pack
+      description: update un pack dans le base de donnes
+      parameters:
+        - in: path
+          name: guarantee_pack_id
+          required: true
+          schema:
+            type: integer
+     
+      responses:
+        '200':
+          description: Success - Ok requete is sended
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  methode:
+                    type: string
+                  message:
+                    type: string
+                  
+        '403':
+          description: le serveur marche pas.  
+
+
+
+ //////////////////////////////////////////
+
+  /admin/imap/email:
+    get:
+      summary: Récuperer la list mails entrants.
+      tags:
+       - "admin"
+      parameters:
+       - in: query
+         name: status
+         schema:
+            type: string
+      responses:
+        '200':
+          description: Success - Tous les emails
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  methode:
+                    type: string
+                  message:
+                    type: string
+                  emails:
+                    type: array
+                    items:
+                      type: object
+
+ //////////////////////////////////////////
+
+
+ /admin/imap/email/send:
+    post:
+      summary: Envoyer un nouveux email
+      tags:
+       - "admin"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                Destinataire:
+                  type: string
+                subject: 
+                  type: string
+                message: 
+                  type: string
+              
+      responses:
+        '200':
+          description: Success - email envoyée
