@@ -351,7 +351,7 @@ exports.findFilesByUserId = async (user_id) => {
 exports.fetchMessageByUserId = async (user_id) => {
 	const result = await db.query(
 		'SELECT m.message_id, m.sender, m.text, m.datecreate, m.response_message_id FROM `message` m ' +
-		'WHERE m.user_id=?',
+		'WHERE m.user_id=? ORDER BY m.datecreate DESC',
 		[user_id],
 	)
 	if (result.length > 0) return result
