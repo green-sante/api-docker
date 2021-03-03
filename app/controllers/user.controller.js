@@ -1170,42 +1170,29 @@ exports.getUserMessageByUserId = async (req, res, next) => {
     return Utils.mwarn(res, req, 'user_id is required')
 
   try {
-    var rows = await fetchMessageByUserId(user_id)
-    var resarray = []
-    var responses = []
-    for (var k in rows) {
-      //mlog(rows);
-      if (rows[k].response_message_id != null) {
-        if (!Array.isArray(responses[rows[k].response_message_id]))
-          responses[rows[k].response_message_id] = []
-        responses[rows[k].response_message_id].push({
-          message_id: rows[k].message,
-          sender: rows[k].sender,
-          text: rows[k].text,
-          datecreate: rows[k].datecreate,
-        })
-      } else {
-        resarray.push({
-          message_id: rows[k].message_id,
-          sender: rows[k].sender,
-          text: rows[k].text,
-          datecreate: rows[k].datecreate,
-          responses: responses,
-        })
+  const messages = await fetchMessageByUserId(user_id)
+ const messagesResponses = messages.map((message) => {
+  if (message.response_message_id != null) {
+    messages.map((e) => {
+      if (message.response_message_id === e.message_id) {
+        message['responses'] = [e]
       }
-    }
-    for (var k in resarray) {
-      if (
-        resarray[k].message_id &&
-        Array.isArray(responses[resarray[k].message_id])
-      )
-        resarray[k].responses = responses[resarray[k].message_id]
-    }
+    })
+  }
+  return message
+})
+const messagessfinale = messages.filter(message => message.response_message_id != null)
+
+
+
+console.log('debugger',messagessfinale)
+ 
+
     res.status(200).json({
       action: req.url,
       method: req.method,
       data: {
-        messages: resarray,
+        messages: messagesResponses,
       },
     })
   } catch (error) {
