@@ -1032,7 +1032,9 @@ exports.getUserFile = async (req, res, next) => {
     res.status(200).json({
       action: req.url,
       method: req.method,
-      files: files
+      data: {
+        files: files
+      }
     })
   } catch (error) {
     next(error)
