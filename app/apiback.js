@@ -291,7 +291,7 @@ myRouter.get('/user/guarantees/activities', getUserGuaranteesByActivities);
 myRouter.get('/user/guarantees', getUserGuaranteesById);
 myRouter.get('/user/guarantee/:guarantee_id', getUserGuaranteesByGuaranteeId);
 myRouter.post('/user/file', postUserFile);
-// myRouter.get('/user/file/:user_id', getUserFile)
+myRouter.get('/user/file/:user_id', getUserFile)
 myRouter.get('/user/recipients', getUserRecipients);
 myRouter.post('/user/recipients', postUserRecipients);
 myRouter.post('/user/askhospital', postUserAskHospital);
