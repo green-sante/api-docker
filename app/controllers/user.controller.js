@@ -1,4 +1,4 @@
-const { getUserByEmail, getUserExemption, getUserByRegistrationkey, insertUserSimple, insertUser, getUserBarometer, getUserInfoByUserId, postUserInfoByUserId, getUserEvents, getAllUsers, getUserContactById, getUserAddressById, getUserExemptionById, updateUserByUserId, getAllUserByCompanyId, getUserGuaranteesByUserId, getUserGuarantees, getUserGuaranteeValues, getUserRecipentsByUserId, saveUserRecipentsByUserId, saveUserAskHospital, getUserMessageByUserId, postUserMessageByUserId, getNbUsersByCompanyId, getAllUserByCompany, findFilesByUserId } = require("../queries/user.queries");
+const { getUserByEmail, getUserExemption, getUserByRegistrationkey, insertUserSimple, insertUser, getUserBarometer, getUserInfoByUserId, postUserInfoByUserId, getUserEvents, getAllUsers, getUserContactById, getUserAddressById, getUserExemptionById, updateUserByUserId, getAllUserByCompanyId, getUserGuaranteesByUserId, getUserGuarantees, getUserGuaranteeValues, getUserRecipentsByUserId, saveUserRecipentsByUserId, saveUserAskHospital, getUserMessageByUserId, postUserMessageByUserId, getNbUsersByCompanyId, getAllUserByCompany, findFilesByUserId,fetchMessageByUserId } = require("../queries/user.queries");
 const { getCompanyAccessByUserId } = require("../queries/company.queries");
 const { updateUserAccess } = require("../queries/useraccess.queries");
 const { getGaranteePackById } = require("../queries/guarantee.queries");
@@ -1161,5 +1161,44 @@ exports.userRegistration = async (req, res, next) => {
       enabled: false,
     })
   }
+}
+
+exports.getUserMessageByUserId = async (req, res, next) => {
+
+  let user_id = parseInt(req.params.user_id) || null
+  if (!user_id || !Number.isInteger(user_id) || user_id == 0)
+    return Utils.mwarn(res, req, 'user_id is required')
+
+  try {
+  const messages = await fetchMessageByUserId(user_id)
+ const messagesResponses = messages.map((message) => {
+  if (message.response_message_id != null) {
+    messages.map((e) => {
+      if (message.response_message_id === e.message_id) {
+        message['responses'] = [e]
+      }
+    })
+  }
+  return message
+})
+const messagessfinale = messages.filter(message => message.response_message_id != null)
+
+
+
+console.log('debugger',messagessfinale)
+ 
+
+    res.status(200).json({
+      action: req.url,
+      method: req.method,
+      data: {
+        messages: messagesResponses,
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
+
+
 }
 

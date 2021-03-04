@@ -275,7 +275,8 @@ const {
 	postUserAskHospital,
 	getUserMessage,
 	postUserMessage,
-	getUserFile
+	getUserFile,
+	getUserMessageByUserId
 } = require('./controllers/user.controller');
 myRouter.get('/user/dashboard', userDashboard);
 myRouter.post('/user/dashboard', saveUserNewsRead);
@@ -294,6 +295,7 @@ myRouter.post('/user/file', postUserFile);
 myRouter.get('/user/recipients', getUserRecipients);
 myRouter.post('/user/recipients', postUserRecipients);
 myRouter.post('/user/askhospital', postUserAskHospital);
+myRouter.get('/user/message/:user_id', getUserMessageByUserId)
 myRouter.get('/user/message', getUserMessage);
 myRouter.post('/user/message', postUserMessage);
 
