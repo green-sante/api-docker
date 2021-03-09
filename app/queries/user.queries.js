@@ -47,7 +47,7 @@ exports.getUserMessageByUserId = async (user_id, start, nbresults) => {
 exports.getUserRecipentsByUserId = async (user_id) => {
 	if (!user_id)
 		return false;
-	const result = await db.query('SELECT r.recipient_user_id, u.email, u.firstname, u.lastname, r.datestart, r.enable \
+	const result = await db.query('SELECT r.recipient_user_id, u.email, u.firstname, u.lastname,u.userstatus_id, r.datestart, r.enable \
 									FROM `user` u, `recipient` r  \
 									WHERE r.user_id=? AND u.user_id=r.recipient_user_id \
 									ORDER BY r.datestart ASC', [user_id]);

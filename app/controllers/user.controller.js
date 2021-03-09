@@ -357,6 +357,7 @@ exports.getUserRecipients = async (req, res, next) => {
       //mlog(rows);
       resarray.push({
         id: rows[k].recipient_user_id,
+        userstatus_id: rows[k].userstatus_id,
         email: rows[k].email,
         firstname: rows[k].firstname,
         lastname: rows[k].lastname,
